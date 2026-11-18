@@ -91,3 +91,4 @@ public class MotoreDeiLivelli {
         return new Rettangolo(cx + dx - larghezza / 2, cy + dy - altezza / 2, larghezza, altezza);
     }
 }
+    
