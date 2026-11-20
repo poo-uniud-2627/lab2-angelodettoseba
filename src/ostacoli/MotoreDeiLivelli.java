@@ -2,6 +2,8 @@
 package ostacoli;
 
 import geometria.Rettangolo;
+import nebbia.Nebbia;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,12 +36,32 @@ public class MotoreDeiLivelli {
      * Lancia IllegalArgumentException se numero non è fra 1 e NUMERO_LIVELLI.
      */
     public static Livello livello(int numero, int larghezzaCampo, int altezzaCampo) {
+        Nebbia nebbia = Nebbia.nessuna();
         if (numero < 1 || numero > NUMERO_LIVELLI) {
             throw new IllegalArgumentException("il livello va da 1 a " + NUMERO_LIVELLI + ", invece è " + numero);
         }
         double velocita = VELOCITA_AL_LIVELLO_1 + VELOCITA_IN_PIU_A_OGNI_LIVELLO * (numero - 1);
         double errore = Math.max(0, ERRORE_AL_LIVELLO_1 - ERRORE_IN_MENO_A_OGNI_LIVELLO * (numero - 1));
-        return new Livello(numero, velocita, errore, new Ostacoli(ostacoli(numero, larghezzaCampo / 2.0, altezzaCampo / 2.0)));
+        //larghezza nebbia 
+        switch(numero){
+            case 1:
+                nebbia = Nebbia.nessuna();
+                break;
+            case 2:
+                nebbia = Nebbia.nessuna();
+                break;
+            case 3:
+                nebbia = Nebbia.alCentro(larghezzaCampo, altezzaCampo, 0.30);
+                break;
+            case 4:
+                nebbia = Nebbia.alCentro(larghezzaCampo, altezzaCampo, 0.35);
+                break;
+            case 5:
+                nebbia = Nebbia.alCentro(larghezzaCampo, altezzaCampo, 0.40);
+                break;
+        }
+
+        return new Livello(numero, velocita, errore, new Ostacoli(ostacoli(numero, larghezzaCampo / 2.0, altezzaCampo / 2.0)),nebbia);
     }
 
     /**
@@ -59,6 +81,7 @@ public class MotoreDeiLivelli {
             ostacoli.add(new OstacoloFragile(attorno(cx, cy, 90, 70, 20, 40), 2));
             ostacoli.add(new OstacoloFragile(attorno(cx, cy, -90, 70, 20, 40), 2));
             ostacoli.add(new OstacoloFragile(attorno(cx, cy, 90, -70, 20, 40), 2));
+            
         }
         if (numero >= 4) {
             // altri due fissi vicino alle racchette e due fragili da tre colpi, in alto e in basso
