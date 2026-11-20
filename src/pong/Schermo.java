@@ -99,7 +99,10 @@ class Schermo extends JPanel {
         Palla palla = partita.getPalla();
         int r = palla.getRaggio();
         Posizione p = palla.getPosizione();
-        g2.fillOval((int) Math.round(p.x() - r), (int) Math.round(p.y() - r), 2 * r, 2 * r);
+        //disegno solo se non ce nebbia
+        if(!partita.getLivello().nebbia().nasconde(p)){
+            g2.fillOval((int) Math.round(p.x() - r), (int) Math.round(p.y() - r), 2 * r, 2 * r);
+        }
 
         g2.setFont(new Font(Font.MONOSPACED, Font.BOLD, 48));
         g2.drawString(String.valueOf(partita.getPunti(Lato.SINISTRA)), larghezza / 2 - 80, 60);
@@ -116,6 +119,12 @@ class Schermo extends JPanel {
                 scriviAlCentro(g2, "Ha vinto il computer.", larghezza, altezza / 2 - 40);
             }
             scriviAlCentro(g2, "Premi un tasto da 1 a 5 per scegliere il livello, poi SPAZIO", larghezza, altezza / 2 + 60);
+        }
+
+        g2.drawLine(larghezza / 2, 0, larghezza / 2, altezza);
+        if(partita.getLivello().nebbia().isPresente()){
+            g2.setColor(Color.gray);
+            riempi(g2, partita.getLivello().nebbia().getZona());
         }
     }
 
